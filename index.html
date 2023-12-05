@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      text-align: center;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin: auto;
+    }
+
+    input, button {
+      margin: 10px 0;
+      padding: 8px;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: #fff;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .catat {
+      text-align: left;
+      margin-left: 30px;
+    }
+
+    .tabel {
+      width: 80%;
+      margin: auto;
+    }
+
+    .jwb {
+      text-align: left;
+      margin-left: 30px;
+    }
+
+    td {
+      background-color: antiquewhite;
+      width: 250px;
+    }
+
+    td.catat {
+      background-color: antiquewhite;
+      width: 10px; /* Menetapkan lebar untuk kolom catatan */
+    }
+
+    td.color {
+      width: 10px;
+      background-color: aqua;
+    }
+
+  </style>
+  <title>Numerical Integration</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Penyelesain Integral Metode Numerik Simpson 3/8</h1>
+    
+    <label for="functionInput">Fungsi f(x):</label>
+    <input type="text" id="functionInput" placeholder="Contoh: 5 * x^3">
+
+    <label for="lowerLimit">Limit Bawah (a):</label>
+    <input type="number" id="lowerLimit" placeholder="Contoh: -1">
+
+    <label for="upperLimit">Limit Atas (b):</label>
+    <input type="number" id="upperLimit" placeholder="Contoh: 2">
+
+    <label for="subInterval">Sub Intervals (n):</label>
+    <input type="number" id="subInterval" placeholder="Contoh: 6">
+
+    <button onclick="calculateIntegration()">Hitung</button>
+
+    <table class="tabel" border="1">
+      <tr>
+          <td class="color" class="catat"><h3 class="catat">CATATAN!</h3></td>
+          <td class="color"><h3>JAWABAN</h3></td>
+      </tr>
+      <tr>
+          <td class="catat"><p class="catat">Operasi kalkulator</p>
+            <p class="catat">Tambah = +</p>
+            <p class="catat">Kurang = -</p>
+            <p class="catat">Perkalian = *</p>
+            <p class="catat">Pembagian = /</p>
+            <p class="catat">Pemangkatan = ^</p>
+        </td>
+          <td>
+            <p class="jwb" id="dik"></p>
+            <p class="jwb" id="a"></p>
+            <p class="jwb" id="b"></p>
+            <p class="jwb" id="n"></p>
+            <p class="jwb" id="h"></p>
+            <p class="jwb" id="result"></p>
+          </td>
+      </tr>
+    </table>
+
+  </div>
+
+  <script>
+    function f(x) {
+      var functionInput = document.getElementById('functionInput').value;
+      var parsedFunction = new Function('x', 'return ' + functionInput.replace(/\^/g, '**'));
+      return parsedFunction(x);
+    }
+
+    function calculateIntegration() {
+      var lower = parseFloat(document.getElementById('lowerLimit').value);
+      var upper = parseFloat(document.getElementById('upperLimit').value);
+      var subInterval = parseInt(document.getElementById('subInterval').value);
+
+      // Display given information
+      document.getElementById('dik').innerText = `Diketahui = `;
+      document.getElementById('a').innerText = `Nilai a = ${lower}`;
+      document.getElementById('b').innerText = `Nilai b = ${upper}`;
+      document.getElementById('n').innerText = `Nilai n = ${subInterval}`;
+
+      var stepSize = (upper - lower) / subInterval;
+      document.getElementById('h').innerText = `Nilai h = (${upper} - ${lower}) / ${subInterval} = ${stepSize}`;
+
+      var integrationSteps = [];
+
+      var integration = f(lower) + f(upper);
+      integrationSteps.push(`f(${lower}) + f(${upper})`);
+
+      for (var i = 1; i <= subInterval - 1; i++) {
+        var k = lower + i * stepSize;
+        var term = (i % 3 === 0) ? `2 * f(${k})` : `3 * f(${k})`;
+        integrationSteps.push(term);
+        integration += eval(term);
+      }
+
+      integration *= (stepSize * 3 / 8);
+
+      // Display detailed steps
+      var detailedSteps = integrationSteps.join(" + ");
+      document.getElementById('result').innerText = `Jawab: ${detailedSteps}\n Hasil: ${integration}`;
+    }
+  </script>
+</body>
+</html>
